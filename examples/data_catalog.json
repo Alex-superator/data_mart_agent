@@ -1,0 +1,61 @@
+{
+  "sources": {
+    "orders_events": {
+      "system": "Kafka (topic orders.v1, Avro)",
+      "rows_per_day": 120000000,
+      "avg_row_bytes": 300,
+      "owner": "Order Management",
+      "pii": false,
+      "schema": [
+        {"name": "order_id", "type": "string"},
+        {"name": "customer_id", "type": "string"},
+        {"name": "amount", "type": "decimal"},
+        {"name": "status", "type": "string"},
+        {"name": "event_ts", "type": "timestamp"}
+      ]
+    },
+    "customers_dim": {
+      "system": "Greenplum (crm.customers)",
+      "rows_per_day": 500000,
+      "avg_row_bytes": 400,
+      "owner": "CRM Platform",
+      "pii": true,
+      "schema": [
+        {"name": "customer_id", "type": "string"},
+        {"name": "email", "type": "string"},
+        {"name": "segment", "type": "string"},
+        {"name": "updated_at", "type": "timestamp"}
+      ]
+    },
+    "payments_log": {
+      "system": "Hadoop (HDFS, Parquet)",
+      "rows_per_day": 80000000,
+      "avg_row_bytes": 250,
+      "owner": "Payments",
+      "pii": false,
+      "schema": [
+        {"name": "payment_id", "type": "string"},
+        {"name": "order_id", "type": "string"},
+        {"name": "amount", "type": "decimal"},
+        {"name": "paid_ts", "type": "timestamp"}
+      ]
+    }
+  },
+  "personas": [
+    {
+      "name": "Data Engineer (разработчик витрин)",
+      "goal": "Быстро поднять витрину и не писать боилерплейт загрузки и проверок.",
+      "pains": ["Копипаст загрузчиков между командами", "Нет единого способа описать проверки качества", "Долгий путь от идеи до первой витрины"]
+    },
+    {
+      "name": "BI-аналитик (потребитель)",
+      "goal": "Доверять цифрам в отчёте и знать, свежи ли данные.",
+      "pains": ["Неожиданные расхождения в отчётах", "Непонятно, когда витрина обновлялась", "Инциденты выясняются по жалобам бизнеса"]
+    },
+    {
+      "name": "Data Steward / владелец данных",
+      "goal": "Контролировать качество и соответствие требованиям (PII, lineage).",
+      "pains": ["Нет автоматического lineage", "Ручной контроль PII", "Нет единой отчётности по DQ"]
+    }
+  ]
+}
